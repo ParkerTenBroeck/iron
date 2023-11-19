@@ -1,0 +1,1 @@
+g++ -I ./ -E ./iron/prelude.h -o everything.h

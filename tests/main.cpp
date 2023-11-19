@@ -1,4 +1,6 @@
 #include <iostream>
+#include "iron/prelude.h"
+#include "test.h"
 
 void test_option();
 void test_result();
@@ -9,6 +11,16 @@ void test_slice_iter();
     
 void test_iter_rev();
 void test_iter_enumerate();
+
+
+void print_enumerated_vec(Result<Result<char*, int>, usize> result){
+  if (auto sorted = result.as_ref().ok()){
+    black_box(*sorted);
+  }else if(auto error = result.as_ref().err()){
+    black_box(*error);
+  }
+}
+
 
 
 int main(){

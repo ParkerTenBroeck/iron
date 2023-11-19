@@ -26,14 +26,14 @@ public:
         other._len = 0;
     }
 
-    /// @brief copy constructor
-    /// @param other the vec we want to copy from
-    Vec(const Vec<T>& other) : _len(0), _capacity(0), _data(nullptr){
-        *this = Vec<T>::with_capacity(other.len());
-        for(auto& val : other){
-            this.push(val);
-        }
-    }
+    // /// @brief copy constructor
+    // /// @param other the vec we want to copy from
+    // Vec(const Vec<T>& other) : _len(0), _capacity(0), _data(nullptr){
+    //     *this = std::move(Vec<T>::with_capacity(other.len()));
+    //     for(auto& val : other){
+    //         this.push(val);
+    //     }
+    // }
 
     /// @brief the point at which our vector starts
     /// @return the pointer to the first element in our vec

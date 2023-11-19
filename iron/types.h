@@ -1,10 +1,17 @@
 #pragma once
 //Parker TenBroeck 2023
 
+#ifndef EXCLUDE_CPP_LIB
 #include <cstdint>
 #include <string>
 #include <stdexcept>
 #include <cstring>
+#else
+// #include <cstdint>
+// #include <string>
+// #include <stdexcept>
+// #include <cstring>
+#endif
 
 #define UNUSED(x) (void)x;
 
@@ -26,37 +33,33 @@ typedef u_int32_t u32;
 typedef u_int16_t u16;
 typedef u_int8_t  u8;
 
-
-
-/// @brief  A wrapper around a reference
-/// @tparam T the type which we hold a reference to
 template<typename T>
-struct ref{
-private:
-    T* _ref;
-public:
-    /// @brief      constructs a wrapper around a reference of type T
-    /// @param val  the reference this value should hold 
-    ref(T& val) : _ref(&val){} 
+using ref = std::reference_wrapper<T>;
 
-    /// @brief allows us to transparently use this type
-    operator T&(){
-        return this->get();
-    }
-    /// @brief  gets the reference of this type
-    /// @return a reference to a constant value of type T  
-    const T& get() const{
-        return *this->_ref;
-    }
+// /// @brief  A wrapper around a reference
+// /// @tparam T the type which we hold a reference to
+// template<typename T>
+// struct ref{
+// private:
+//     T* _ref;
+// public:
+//     /// @brief      constructs a wrapper around a reference of type T
+//     /// @param val  the reference this value should hold 
+//     ref(T& val) : _ref(&val){} 
 
-    /// @brief  gets the reference of this type
-    /// @return a reference to a value of type T  
-    T& get(){
-        return *this->_ref;
-    }
-};
+//     /// @brief allows us to transparently use this type
+//     operator T&(){
+//         return this->get();
+//     }
+//     /// @brief  gets the reference of this type
+//     /// @return a reference to a constant value of type T  
+//     const T& get() const{
+//         return *this->_ref;
+//     }
 
-template<typename T>
-struct Wrap{
-    T val;
-};
+//     /// @brief  gets the reference of this type
+//     /// @return a reference to a value of type T  
+//     T& get(){
+//         return *this->_ref;
+//     }
+// };

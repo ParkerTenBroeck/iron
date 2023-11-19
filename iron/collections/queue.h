@@ -56,7 +56,7 @@ private:
                 // the tail is the starting index 
                 this->_tail = reserve_front?1:0;
                 // make sure to add 1 to our head if we reserved a spot in the front
-                this->_head = this->_size + reserve_front?1:0;
+                this->_head = this->_size + (reserve_front?1:0);
             }
         }
     }

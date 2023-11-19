@@ -1,5 +1,6 @@
 #include "iron/prelude.h"
 #include "iron/collections/vector.h"
+#include "test.h"
 #include <assert.h>
 #include <iostream>
 
@@ -45,6 +46,12 @@ void test_vec_primitive(){
 }
 
 void test_vec_complex(){
+    {
+        Vec<String> vec = Vec<String>::len_with(black_box_ret(199), std::string("buck you"));
+        assert(vec.len() == 199);
+        assert(vec.capacity() == 256);
+        assert(vec[7] == "buck you");
+    }
     Vec<String> vec;
     assert(vec.len() == 0);
     assert(vec.capacity() == 0);

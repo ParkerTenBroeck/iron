@@ -11,15 +11,15 @@ private:
         T _val;
     };
     /// @brief true if the the value in the union exists, false otherwise
-    bool _state;
+    bool _exists;
 public:
 
-    Option() : _cloest_to_zst(0), _state(false){}
-    Option(T&& val) : _val(std::move(val)), _state(true){}
-    Option(Option<T>&& val): _val(val._val), _state(val._state){
-        val._state = false;
+    Option() : _cloest_to_zst(0), _exists(false){}
+    Option(T&& val) : _val(std::move(val)), _exists(true){}
+    Option(Option<T>&& val): _val(val._val), _exists(val._exists){
+        val._exists = false;
     }
-    Option(const Option<T>& val): _val(val._val), _state(val._state){}
+    Option(const Option<T>& val): _val(val._val), _exists(val._exists){}
 
     /// @brief overload the boolean cast to return true if the option is So,e
     explicit operator bool() const {
@@ -79,17 +79,17 @@ public:
 
     /// @return true if this option is Some, false otherwise
     [[nodiscard]] bool is_some() const{
-        return this->_state;
+        return this->_exists;
     }
 
     /// @return true if this option is None, false otherwise
     [[nodiscard]] bool is_none() const{
-        return !this->_state;
+        return !this->_exists;
     }
 
     /// @return unwrap the Some varient of our Option moving it out. throwing an exception otherwise
     [[nodiscard]] T unwrap() {
-        if(!this->_state)
+        if(!this->_exists)
             throw std::runtime_error("Unwrapped a None");
         return std::move(this->_val);
     }
@@ -116,15 +116,19 @@ template<typename T>
 struct Option<T&>{
 private:
     /// @brief null if the reference doesn't exist a valid pointer if the reference does
-    T* raw;
+    union{
+        T* raw;
+        ref<T> _ref;
+    };
+    bool _exists;
 
 public:
-    Option() : raw(nullptr){}
-    Option(T& val) : raw(&val){}
-    Option(Option<T&>&& val): raw(val.raw){
+    Option() : raw(nullptr), _exists(false){}
+    Option(T& val) : raw(&val), _exists(true){}
+    Option(Option<T&>&& val): raw(val.raw), _exists(val._exists){
         val.raw = nullptr;
     }
-    Option(const Option<T>& val): raw(val.raw){}
+    Option(const Option<T>& val): raw(val.raw), _exists(val.exists){}
     
     /// @brief overload the boolean cast to return true if the option is So,e
     operator bool() const {
@@ -162,15 +166,33 @@ public:
             throw std::runtime_error("Tried to unwrap a None");
         return *this->raw;
     }
+
+    /// @return an optional containing a reference to the data stored in this optional. None if this optional is None
+    [[nodiscard]] Option<ref<ref<T>>> as_ref() {
+        if (this->is_some()){
+            return {this->_ref};
+        }else{
+            return {};
+        }
+    }
+
+    /// @return an optional containing a reference to the data stored in this optional. None if this optional is None
+    [[nodiscard]] Option<ref<const ref<T>>> as_ref() const {
+        if (this->is_som()()){
+            return {this->_ref};
+        }else{
+            return {};
+        }
+    }
     
     /// @return true if this option is Some, false otherwise
     [[nodiscard]] bool is_some() const{
-        return this->raw != nullptr;
+        return this->_exists;
     }
 
     /// @return true if this option is None, false otherwise
     [[nodiscard]] bool is_none() const{
-        return this->raw == nullptr;
+        return !this->_exists;
     }
 
     /// @return unwrap the Some varient of our Option moving it out. throwing an exception otherwise
